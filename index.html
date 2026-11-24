@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173d32"><meta name="description" content="FIFFY360 - il tuo spazio personale">
+<link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css">
+<title>FIFFY360</title>
+</head>
+<body>
+<header class="top">
+  <div><div class="eyebrow">IL TUO SPAZIO PERSONALE</div><h1>FIFFY<span>360</span></h1></div>
+  <button class="avatar" aria-label="Profilo">✦</button>
+</header>
+<div class="welcome"><div class="eyebrow" id="today"></div><h2>La tua vita,<br><em>in equilibrio.</em></h2><p>Organizza, prenditi cura di te, un passo alla volta.</p></div>
+<main>
+  <section id="home" class="page active">
+    <div class="stats">
+      <article class="stat"><span>Attività completate</span><strong id="taskCount">0/0</strong></article>
+      <article class="stat"><span>Acqua di oggi</span><strong id="waterCount">0/8</strong></article>
+    </div>
+    <article class="panel">
+      <div class="panel-head"><h3>Le mie attività</h3><span class="tag">OGGI</span></div>
+      <form id="taskForm" class="inline-form"><input id="taskInput" placeholder="Aggiungi un'attività…" maxlength="90"><button class="gold-btn">+</button></form>
+      <ul id="taskList" class="task-list"></ul>
+    </article>
+    <article class="panel">
+      <div class="panel-head"><h3>Il tuo benessere</h3><span class="muted">Obiettivo: 8 bicchieri</span></div>
+      <div class="waterline"><strong id="waterText">0 bicchieri</strong><div><button id="waterMinus" class="round-btn">−</button><button id="waterPlus" class="round-btn">+</button></div></div>
+      <div class="progress"><i id="waterBar"></i></div>
+      <p class="muted small">Come ti senti oggi?</p>
+      <div class="moods" id="moods"><button data-mood="Male">☹️<small>Male</small></button><button data-mood="Così così">😐<small>Così così</small></button><button data-mood="Bene">🙂<small>Bene</small></button><button data-mood="Benissimo">🥰<small>Benissimo</small></button></div>
+    </article>
+    <article class="panel"><div class="panel-head"><h3>Un pensiero per oggi</h3><span>✧</span></div><p class="quote">“Non devi fare tutto oggi. Devi solo iniziare.”</p></article>
+  </section>
+  <section id="calendar" class="page"><article class="panel"><h3>Calendario</h3><p class="muted">Organizza appuntamenti, ricorrenze e promemoria.</p><div class="placeholder-icon">▦</div><p class="muted">La vista calendario e la sincronizzazione con Apple Calendar saranno sviluppate nella fase successiva.</p></article></section>
+  <section id="food" class="page"><article class="panel"><h3>Alimentazione</h3><p class="muted">Piano pasti, ricette, diario alimentare e lista della spesa.</p><div class="tiles"><div>🥣<b>Colazione</b><small>Da pianificare</small></div><div>🍽️<b>Pranzo</b><small>Da pianificare</small></div><div>🌙<b>Cena</b><small>Da pianificare</small></div><div>🛒<b>Spesa</b><small>Lista personale</small></div></div></article></section>
+  <section id="workout" class="page"><article class="panel"><h3>Allenamento</h3><p class="muted">Schede, esercizi, immagini e progressi in palestra.</p><div class="placeholder-icon">✧</div><p class="muted">Qui troverai il tuo programma settimanale e lo storico degli allenamenti.</p></article></section>
+  <section id="body" class="page"><article class="panel"><h3>Corpo e progressi</h3><p class="muted">Registra i tuoi dati e osserva i cambiamenti nel tempo.</p><label>Peso (kg)<input id="weight" type="number" inputmode="decimal" step=".1" placeholder="Es. 58"></label><label>Note sulle misure<textarea id="measureNotes" placeholder="Vita, fianchi, cosce…"></textarea></label><button id="saveBody" class="primary-btn">Salva rilevazione</button><p id="bodySaved" class="muted small"></p></article></section>
+  <section id="cycle" class="page"><article class="panel"><h3>Ciclo</h3><p class="muted">Annota ciclo, flusso, sintomi e osservazioni personali.</p><label>Primo giorno dell'ultima mestruazione<input id="periodDate" type="date"></label><label>Note<textarea id="cycleNotes" placeholder="Sintomi o osservazioni…"></textarea></label><button id="saveCycle" class="primary-btn">Salva annotazione</button><p id="cycleSaved" class="muted small"></p><p class="fineprint">Le previsioni sono indicative e non sostituiscono un parere medico.</p></article></section>
+  <section id="health" class="page"><article class="panel"><h3>Salute quotidiana</h3><p class="muted">Un piccolo check-in giornaliero.</p><label>Ore di sonno<input id="sleep" type="number" min="0" max="24" step=".5" placeholder="Es. 7.5"></label><label>Digestione e intestino<textarea id="digestion" placeholder="Come ti senti oggi?"></textarea></label><label>Movimento e altre note<textarea id="healthNotes" placeholder="Energia, sintomi, attività…"></textarea></label><button id="saveHealth" class="primary-btn">Salva check-in</button><p id="healthSaved" class="muted small"></p></article></section>
+  <section id="diary" class="page"><article class="panel"><h3>Il mio diario</h3><p class="muted">Uno spazio tutto tuo, senza giudizio.</p><textarea id="diaryText" rows="7" placeholder="Racconta com'è andata oggi…"></textarea><button id="saveDiary" class="primary-btn">Salva nel diario</button><p id="diarySaved" class="muted small"></p></article></section>
+  <section id="assistant" class="page"><article class="panel assistant"><div class="assistant-mark">✧</div><h3>La tua assistente</h3><p>“Vuoi che ti ascolti, che ti dia un consiglio o che ti aiuti a capire cosa provi?”</p><div class="choice-list"><button>♡　Voglio solo essere ascoltata</button><button>✧　Voglio un consiglio</button><button>☼　Aiutami a capire cosa provo</button></div><p class="fineprint">Anteprima dell'interfaccia: l'assistente AI e la memoria personale richiederanno un servizio AI collegato e impostazioni di privacy dedicate.</p></article></section>
+  <section id="vault" class="page"><article class="panel"><div class="vault-title">♧ <h3>Cassaforte</h3></div><p class="muted">Uno spazio progettato per custodire gli accessi ai tuoi account.</p><div class="security-note">🔒 La cassaforte è in progettazione. Non inserire password reali in questa anteprima.</div><div class="tiles"><div>◎<b>Social</b><small>Account</small></div><div>✉<b>Email</b><small>Caselle</small></div><div>▤<b>Banche</b><small>Servizi</small></div><div>◇<b>Altri account</b><small>Accessi</small></div></div><p class="fineprint">La versione sicura richiederà cifratura, autenticazione e integrazione iOS per Face ID. Non salveremo credenziali in chiaro nel browser.</p></article></section>
+</main>
+<nav class="nav">
+<button class="selected" data-page="home">⌂<small>Home</small></button>
+<button data-page="calendar">▦<small>Agenda</small></button>
+<button data-page="food">♨<small>Pasti</small></button>
+<button data-page="workout">✧<small>Fitness</small></button>
+<button data-page="assistant">♡<small>AI</small></button>
+<button data-page="more" id="moreBtn">•••<small>Altro</small></button>
+</nav>
+<div id="moreMenu" class="more-menu"><button data-page="body">Corpo e progressi</button><button data-page="cycle">Ciclo</button><button data-page="health">Salute</button><button data-page="diary">Diario</button><button data-page="vault">Cassaforte</button></div>
+<script src="app.js"></script>
+</body></html>
