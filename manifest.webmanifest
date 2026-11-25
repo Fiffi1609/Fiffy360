@@ -1,10 +1,19 @@
 {
   "name": "FIFFY360",
   "short_name": "FIFFY360",
+  "description": "Il tuo spazio personale, a 360 gradi.",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#eeeade",
+  "orientation": "portrait",
+  "background_color": "#f6f3ec",
   "theme_color": "#173d32",
-  "lang": "it",
-  "icons": []
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
