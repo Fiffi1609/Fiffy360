@@ -2,8 +2,7 @@ const KEY='fiffy360_data_v3';
 const today=()=>new Date().toISOString().slice(0,10);
 const uid=()=>Math.random().toString(36).slice(2,10);
 const dateLabel=(d)=>{try{return new Date(d+'T12:00:00').toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})}catch{return d}};
-const initial=()=>({tasks:[],events:[],water:0,waterDate:today(),moods:[],diary:[],meals:{},groceries:[],workouts:[],body:[],cycle:[],health:[],settings:{waterGoal:8},evening:[]});
-let data;
+const initial=()=>({tasks:[],events:[],water:0,waterDate:today(),moods:[],diary:[],meals:{},groceries:[],workouts:[],body:[],cycle:[],health:[],settings:{waterGoal:8},evening:[],assistantMessages:[],assistantMode:'Ascoltami e basta'});let data;
 try{data={...initial(),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch{data=initial()}
 let tab='home',agendaMode='week',foodDay=0;
 function save(){localStorage.setItem(KEY,JSON.stringify(data))}
@@ -46,8 +45,56 @@ function renderMore(){return `<h1 class="page-title">Il tuo FIFFY360</h1><p clas
 function renderFood(){let days=Array.from({length:7},(_,i)=>{let d=new Date();d.setDate(d.getDate()+i);return d.toISOString().slice(0,10)});let day=days[foodDay]||today(),meals=data.meals[day]||[];return `<h1 class="page-title">Pasti e spesa</h1><p class="subtext">Organizza i pasti con flessibilità, giorno per giorno.</p><div class="tabs">${days.map((d,i)=>`<button class="chip ${i===foodDay?'active':''}" onclick="foodDay=${i};render()">${i===0?'Oggi':new Date(d+'T12:00:00').toLocaleDateString('it-IT',{weekday:'short',day:'numeric'})}</button>`).join('')}</div><div class="section-head"><h2>${dateLabel(day)}</h2><button class="link-btn" onclick="addMeal('${day}')">＋ Aggiungi pasto</button></div><div class="list-card">${meals.map(m=>`<div class="item-row"><span class="pill">${esc(m.type)}</span><div class="item-main"><strong>${esc(m.name)}</strong><small>${esc(m.note||'')}</small></div><button class="link-btn" onclick="data.meals['${day}']=data.meals['${day}'].filter(x=>x.id!=='${m.id}');save();render()">×</button></div>`).join('')||'<div class="empty">Nessun pasto pianificato per questo giorno.</div>'}</div><div class="section-head"><h2>Lista della spesa</h2><button class="link-btn" onclick="addGrocery()">＋ Aggiungi</button></div><div class="list-card">${data.groceries.map(g=>`<div class="item-row"><button class="check ${g.done?'done':''}" onclick="toggleGrocery('${g.id}')">${g.done?'✓':''}</button><div class="item-main"><strong class="${g.done?'done-text':''}">${esc(g.name)}</strong><small>${esc(g.cat)}</small></div><button class="link-btn" onclick="deleteItem('groceries','${g.id}')">×</button></div>`).join('')||'<div class="empty">La tua lista è vuota.</div>'}</div>`}
 function renderFitness(){return `<h1 class="page-title">Fitness</h1><p class="subtext">Un percorso sostenibile, da adattare alle tue energie e ai tuoi obiettivi.</p><div class="card"><h3>La tua settimana</h3><p>Puoi registrare le sessioni che svolgi e osservare la continuità. Il piano qui sotto è un modello modificabile, non una prescrizione personalizzata.</p><div class="grid" style="margin-top:12px"><div class="card"><h3>Sessione A</h3><p>Forza total body</p></div><div class="card"><h3>Sessione B</h3><p>Mobilità e core</p></div><div class="card"><h3>Sessione C</h3><p>Forza + attività leggera</p></div><div class="card"><h3>Recupero</h3><p>Camminata e stretching dolce</p></div></div><div class="btn-row"><button class="btn" onclick="addWorkout()">＋ Registra allenamento</button></div></div><div class="section-head"><h2>Le tue sessioni</h2></div><div class="list-card">${data.workouts.slice(0,10).map(x=>`<div class="item-row"><div class="item-main"><strong>${esc(x.title)}</strong><small>${dateLabel(x.date)} · ${esc(x.min||'—')} min</small></div></div>`).join('')||'<div class="empty">Non hai ancora registrato allenamenti.</div>'}</div><p class="small-note">Le immagini, i video e un programma di esercizi realmente personalizzato richiedono una fase dedicata. Se hai dolori o condizioni cliniche, confronta il piano con un professionista.</p>`}
 function renderDiary(){return `<h1 class="page-title">Il tuo diario</h1><p class="subtext">Uno spazio privato per mettere in ordine i pensieri, senza giudizio.</p><button class="btn" onclick="addDiary()">＋ Scrivi una pagina</button><div class="section-head"><h2>Le tue pagine</h2></div>${data.diary.map(x=>`<div class="entry"><div class="eyebrow">${dateLabel(x.date)} · ${esc(x.time||'')}</div><strong>${esc(x.title)}</strong><p>${esc(x.body)}</p><button class="link-btn" onclick="deleteItem('diary','${x.id}')">Elimina</button></div>`).join('')||'<div class="card empty">Quando vorrai, potrai iniziare da qui. Anche poche righe bastano.</div>'}${data.evening.slice(0,5).map(x=>`<div class="entry"><div class="eyebrow">RIEPILOGO · ${dateLabel(x.date)}</div><strong>La giornata in breve</strong><p>${x.good?'La cosa bella: '+esc(x.good)+'\n':''}${x.hard?'Ciò che è pesato: '+esc(x.hard)+'\n':''}${x.proud?'Orgoglio: '+esc(x.proud)+'\n':''}${x.tomorrow?'Domani: '+esc(x.tomorrow):''}</p></div>`).join('')}</div>`}
-function renderAssistant(){return `<h1 class="page-title">Il tuo spazio di ascolto</h1><p class="subtext">Prima di tutto, scegli di cosa hai bisogno in questo momento.</p><div class="card"><h3>Come posso starti accanto?</h3><p>Non devi avere già le idee chiare. Puoi iniziare da una frase, da un pensiero o da come ti senti.</p><div class="btn-row"><button class="btn" onclick="assistantPrompt('Ascoltami e basta')">Vorrei solo essere ascoltata</button><button class="btn secondary" onclick="assistantPrompt('Aiutami a capire cosa provo')">Aiutami a capire cosa provo</button><button class="btn ghost" onclick="assistantPrompt('Vorrei un consiglio')">Vorrei un consiglio</button></div></div><p class="small-note" style="margin-top:14px">Questa schermata è una guida locale: non è ancora collegata a un modello AI e non invia né interpreta i tuoi messaggi. Per una conversazione AI vera servirà un backend protetto.</p>`}
-function assistantPrompt(choice){openModal(choice,area('Raccontami quello che vuoi condividere','a-text')+`<p class="small-note">Per ora puoi salvare il tuo testo nel diario, senza inviarlo a un servizio esterno.</p>`,'Salva nel diario',b=>{let body=b.querySelector('#a-text').value.trim();if(!body)return toast('Scrivi qualcosa');data.diary.unshift({id:uid(),title:choice,date:today(),body});save();closeModal();toast('Salvato nel diario')})}
+function assistantPrompt(choice){data.assistantMode=choice;save();render()}
+function renderAssistant(){
+const messages=Array.isArray(data.assistantMessages)?data.assistantMessages:[];
+const bubbles=messages.map(m=>`<div class="entry" style="margin:10px 0;${m.role==='user'?'margin-left:9%;background:#f5f0e7;':''}"><div class="eyebrow">${m.role==='user'?'TU':'FIFFY'}</div><p style="white-space:pre-wrap;margin:6px 0 0">${esc(m.text||'')}</p></div>`).join('');
+return `<h1 class="page-title">Il tuo spazio di ascolto</h1>
+<p class="subtext">Uno spazio in cui puoi parlare liberamente.</p>
+<div class="card"><h3>Di cosa hai bisogno adesso?</h3>
+<div class="btn-row">
+<button class="btn" onclick="assistantPrompt('Ascoltami e basta')">Vorrei solo essere ascoltata</button>
+<button class="btn secondary" onclick="assistantPrompt('Aiutami a capire cosa provo')">Aiutami a capire cosa provo</button>
+<button class="btn ghost" onclick="assistantPrompt('Vorrei un consiglio')">Vorrei un consiglio</button>
+</div></div>
+<div class="list-card" id="assistantChat" style="margin-top:14px;max-height:48vh;overflow-y:auto">
+${bubbles||'<div class="empty">Ciao, sono FIFFY. Sono qui per te. Da dove vuoi iniziare?</div>'}
+</div>
+<div class="card" style="margin-top:12px">
+<div class="field"><label for="assistantInput">Scrivimi quello che hai in mente</label>
+<textarea id="assistantInput" rows="3" placeholder="Raccontami come ti senti..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAssistantMessage()}"></textarea></div>
+<div class="btn-row"><button class="btn" id="assistantSend" onclick="sendAssistantMessage()">Invia</button>
+<button class="btn ghost" onclick="clearAssistantChat()">Nuova conversazione</button></div>
+</div>
+<p class="small-note">La chat viene salvata su questo dispositivo. I messaggi inviati vengono elaborati da Google Gemini. I dati del diario e della salute non vengono inviati automaticamente.</p>`;
+}
+async function sendAssistantMessage(){
+const input=document.getElementById('assistantInput');
+if(!input)return;
+const message=input.value.trim();
+if(!message)return toast('Scrivi un messaggio');
+if(!Array.isArray(data.assistantMessages))data.assistantMessages=[];
+data.assistantMessages.push({role:'user',text:message});
+input.value='';
+save();render();
+try{
+const recent=data.assistantMessages.slice(-12).map(m=>(m.role==='user'?'Utente':'FIFFY')+': '+m.text).join('\n');
+const prompt='Modalità: '+(data.assistantMode||'Ascoltami e basta')+'. Rispondi in italiano.\n'+recent+'\nRispondi all’ultimo messaggio.';
+const response=await fetch('https://fiffy360assistente.fedetartaglia02.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:prompt})});
+const result=await response.json();
+if(!response.ok)throw new Error(result.error||'Errore del servizio');
+if(!result.answer)throw new Error('Nessuna risposta ricevuta');
+data.assistantMessages.push({role:'assistant',text:result.answer});
+}catch(error){
+data.assistantMessages.push({role:'assistant',text:'Non riesco a collegarmi in questo momento. '+error.message});
+}
+save();render();
+}
+function clearAssistantChat(){
+if(!confirm('Vuoi cancellare questa conversazione?'))return;
+data.assistantMessages=[];
+save();render();
+}
 function renderSettings(){return `<h1 class="page-title">Impostazioni</h1><p class="subtext">Gestisci i tuoi dati e le preferenze di FIFFY360.</p><div class="card"><h3>Obiettivo acqua</h3>${field('Bicchieri al giorno','goal','number',data.settings.waterGoal,'min="1" max="30"')}<button class="btn secondary" onclick="let v=+document.getElementById('goal').value;if(v>0){data.settings.waterGoal=v;save();render();toast('Obiettivo aggiornato')}">Salva obiettivo</button></div><div class="section-head"><h2>I tuoi dati</h2></div><div class="card"><p>Puoi esportare una copia dei dati registrati su questo dispositivo oppure ripristinare un backup JSON.</p><div class="btn-row"><button class="btn" onclick="exportData()">Esporta backup</button><button class="btn secondary" onclick="importData()">Importa backup</button></div></div><div class="section-head"><h2>Privacy e sicurezza</h2></div><div class="danger-zone"><strong>Informazione importante</strong><p class="small-note">In questa versione i dati sono salvati nel browser del dispositivo tramite memoria locale. Non sono cifrati end-to-end, non hanno backup cloud automatico e potrebbero andare persi cancellando i dati del browser. Evita di inserire password reali, credenziali bancarie o informazioni estremamente sensibili.</p></div><div class="section-head"><h2>Funzioni non ancora collegate</h2></div><div class="list-card">${['Face ID nativo e cassaforte password','Assistente AI con memoria controllabile','Notifiche push e promemoria programmati affidabili','Siri / Comandi rapidi avanzati','Sincronizzazione bidirezionale con Calendario Apple','Apple Health e HealthKit','Immagini e video degli esercizi'].map(x=>`<div class="item-row"><div class="item-main"><strong>${x}</strong><small>Richiede integrazione o servizio aggiuntivo</small></div><span class="pill">Da attivare</span></div>`).join('')}</div><div class="section-head"><h2>Zona di attenzione</h2></div><div class="danger-zone"><p class="small-note">La cancellazione rimuove tutti i dati salvati localmente su questo browser.</p><button class="btn danger" onclick="if(confirm('Vuoi cancellare tutti i dati di FIFFY360 da questo dispositivo?')){localStorage.removeItem(KEY);data=initial();render();toast('Dati locali cancellati')}">Cancella tutti i dati</button></div><p class="small-note" style="text-align:center;margin-top:22px">FIFFY360 · Versione 3.0 · Il tuo spazio, a 360°</p>`}
 function render(){let v=document.getElementById('view');let pages={home:renderHome,agenda:renderAgenda,tasks:renderTasks,care:renderCare,more:renderMore,food:renderFood,fitness:renderFitness,diary:renderDiary,assistant:renderAssistant,settings:renderSettings};v.innerHTML=(pages[tab]||renderHome)();document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab))}
 document.querySelectorAll('.nav-item').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
