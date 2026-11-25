@@ -1,0 +1,31 @@
+FIFFY360 — versione aggiornata
+
+FILE DA PUBBLICARE NELLA ROOT DEL REPOSITORY GITHUB:
+- index.html
+- app.js
+- styles.css
+- service-worker.js
+- manifest.webmanifest
+- icon.svg
+
+FUNZIONI AGGIORNATE:
+- Assistente FIFFY collegato al Worker Gemini già configurato.
+- Menu settimanale di 7 giorni con quattro momenti alimentari.
+- Lista della spesa generata dagli ingredienti del menu.
+- Programma fitness mensile su quattro settimane e registro allenamenti.
+- Pasti, agenda, attività, diario, benessere, progressi, ciclo, backup e ripristino.
+- Aggiornamento della pianificazione al primo accesso dopo il cambio settimana/mese, se era già stata generata.
+
+PUBBLICAZIONE:
+1. Aprire il repository Fiffy360 su GitHub, branch main.
+2. Add file > Upload files.
+3. Estrarre questo ZIP e caricare i sei file indicati sopra nella root.
+4. Confermare il commit. Sostituire i file omonimi.
+5. Attendere GitHub Pages e riaprire https://fiffi1609.github.io/Fiffy360/.
+6. Se compare la vecchia versione, chiudere e riaprire il browser.
+
+NOTE:
+- La generazione settimanale/mensile avviene quando si apre l'app dopo il cambio periodo, non mentre l'app è chiusa. Per generazioni a orario fisso e notifiche push serve una funzione schedulata e un'integrazione push dedicate.
+- I menu e gli allenamenti inclusi sono modelli generali modificabili, non prescrizioni mediche o nutrizionali personalizzate.
+- I dati personali restano nel localStorage del browser. La chat inviata a FIFFY viene elaborata dal Worker Gemini già configurato; diario e dati salute non vengono inviati automaticamente.
+- L'uso Gemini dipende dai limiti gratuiti disponibili. Nessun addebito automatico è configurato dall'app.
